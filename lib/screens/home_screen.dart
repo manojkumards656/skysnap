@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final HiveService _hiveService = HiveService();
   List<Map<String, dynamic>> _snaps = [];
   int _discoveredCount = 0;
+  Map<String, String?> _discoveryMap = {};
 
   @override
   void initState() {
@@ -28,7 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void _loadData() {
     setState(() {
       _snaps = _hiveService.getAllSnaps();
-      _discoveredCount = _hiveService.getDiscoveredCloudCount();
+      _discoveryMap = _hiveService.getDiscoveryMap();
+      _discoveredCount = _discoveryMap.length;
     });
   }
 
@@ -42,8 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _viewSnap(Map<String, dynamic> snap) {
     final List<dynamic>? topThreeData = snap['topThree'];
-    final List<Prediction>? topThree = topThreeData != null
-        ? topThreeData.map((item) {
+    final List<Prediction>? topThree = topThreeData?.map((item) {
             final Map<dynamic, dynamic> map = item as Map;
             final label = map['label'] as String;
             return Prediction(
@@ -52,8 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               confidence: (map['confidence'] as num).toDouble(),
               inferenceTimeMs: snap['inferenceTimeMs'] ?? 0,
             );
-          }).toList()
-        : null;
+          }).toList();
 
     final prediction = Prediction(
       label: snap['predictionLabel'],
@@ -203,6 +203,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       // Info stats
                       _buildInfoSection(Icons.description, 'Description', info['description']),
+                      _buildInfoSection(Icons.category_outlined, 'Cloud Family / Altitude Layer', info['family']),
+                      _buildInfoSection(Icons.science_outlined, 'Physical Composition', info['composition']),
+                      _buildInfoSection(Icons.air_outlined, 'Formation Mechanism', info['formation']),
+                      _buildInfoSection(Icons.grain_outlined, 'Precipitation Potential', info['precipitation']),
                       _buildInfoSection(Icons.height, 'Typical Altitude', info['typicalAltitude']),
                       _buildInfoSection(Icons.wb_sunny_outlined, 'Weather Meaning', info['weatherMeaning']),
                       _buildInfoSection(Icons.auto_awesome, 'Fun Fact', info['funFact']),
@@ -259,7 +263,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
 
     return Scaffold(
       extendBody: true,
@@ -424,8 +427,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   delegate: SliverChildListDelegate(
                     AppConstants.cloudFullNames.keys.map((key) {
-                      final isDiscovered = _hiveService.isCloudDiscovered(key);
-                      final userImage = _hiveService.getDiscoveredCloudImage(key);
+                      final isDiscovered = _discoveryMap.containsKey(key);
+                      final userImage = _discoveryMap[key];
                       
                       return InkWell(
                         onTap: () => _showCloudEncyclopediaDetails(key),
@@ -433,6 +436,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: GlassCard(
                           borderRadius: 16,
                           padding: EdgeInsets.zero,
+                          enableBlur: false,
                           color: isDiscovered
                               ? const Color(0xFF1B2C4E).withValues(alpha: 0.3)
                               : Colors.white.withValues(alpha: 0.03),
@@ -453,6 +457,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Image.file(
                                       File(userImage),
                                       fit: BoxFit.cover,
+                                      cacheWidth: 200,
                                     ),
                                   ),
                                 
@@ -576,6 +581,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(16),
                                 child: GlassCard(
                                   padding: const EdgeInsets.all(12),
+                                  enableBlur: false,
                                   child: Row(
                                     children: [
                                       // Thumbnail
@@ -586,6 +592,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           width: 70,
                                           height: 70,
                                           fit: BoxFit.cover,
+                                          cacheWidth: 140,
+                                          cacheHeight: 140,
                                         ),
                                       ),
                                       const SizedBox(width: 16),

@@ -41,6 +41,13 @@ class _GaugePainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = min(size.width / 2, size.height / 2) - 8;
 
+    // Scale factors relative to gauge size for proper rendering at any size
+    final double arcStroke = (size.width * 0.05).clamp(3.0, 8.0);
+    final double tickInset = arcStroke + (size.width * 0.07);
+    final double needleWidth = (size.width * 0.02).clamp(1.5, 3.0);
+    final double pinRadius = (size.width * 0.04).clamp(3.0, 7.0);
+    final double pinInner = (pinRadius * 0.45).clamp(1.5, 3.0);
+
     // 1. Draw outer glowing bezel/ring
     final bezelPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -71,7 +78,7 @@ class _GaugePainter extends CustomPainter {
     final trackPaint = Paint()
       ..color = Colors.white10
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 6.0
+      ..strokeWidth = arcStroke
       ..strokeCap = StrokeCap.round;
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius - 15),
@@ -84,7 +91,7 @@ class _GaugePainter extends CustomPainter {
     // Draw active confidence gradient arc
     final activePaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 6.0
+      ..strokeWidth = arcStroke
       ..strokeCap = StrokeCap.round
       ..shader = SweepGradient(
         colors: [
@@ -116,13 +123,14 @@ class _GaugePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
-    const numTicks = 31; // 30 gaps
+    // Fewer ticks at small sizes to avoid clutter
+    final int numTicks = size.width < 140 ? 21 : 31;
     for (int i = 0; i < numTicks; i++) {
       final angle = startAngle + (i / (numTicks - 1)) * totalSweep;
       final isMajor = i % 5 == 0;
       
-      final double tickLength = isMajor ? 10.0 : 6.0;
-      final startRadius = radius - 26;
+      final double tickLength = isMajor ? 8.0 : 4.0;
+      final startRadius = radius - 15 - tickInset;
       final endRadius = startRadius - tickLength;
 
       final startOffset = Offset(
@@ -137,20 +145,58 @@ class _GaugePainter extends CustomPainter {
       canvas.drawLine(startOffset, endOffset, isMajor ? majorTickPaint : tickPaint);
     }
 
-    // 5. Draw digital readout in center
+    // 5. Draw dark backing behind center text so needle doesn't obscure it
+    final textZoneRadius = radius * 0.42;
+    final textBgPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.55)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(center, textZoneRadius, textBgPaint);
+
+    // 6. Draw analog physical needle pointing to current value
+    // Drawn BEFORE text so text is always on top
+    final needleAngle = startAngle + currentSweep;
+    final needleLength = radius - 15 - tickInset - 2;
+    
+    final needlePaint = Paint()
+      ..color = Colors.redAccent
+      ..strokeWidth = needleWidth
+      ..strokeCap = StrokeCap.round;
+
+    final needleEnd = Offset(
+      center.dx + needleLength * cos(needleAngle),
+      center.dy + needleLength * sin(needleAngle),
+    );
+
+    // Draw the tail of the needle extending slightly backwards
+    final double tailLength = size.width * 0.08;
+    final needleTail = Offset(
+      center.dx - tailLength * cos(needleAngle),
+      center.dy - tailLength * sin(needleAngle),
+    );
+
+    canvas.drawLine(needleTail, needleEnd, needlePaint);
+
+    // Needle pivot center pin
+    final centerPinOuter = Paint()..color = Colors.redAccent;
+    final centerPinInner = Paint()..color = Colors.white;
+
+    canvas.drawCircle(center, pinRadius, centerPinOuter);
+    canvas.drawCircle(center, pinInner, centerPinInner);
+
+    // 7. Draw digital readout in center (ON TOP of everything)
     final percentageText = '${(value * 100).toStringAsFixed(1)}%';
     final textPainter = TextPainter(
       text: TextSpan(
         text: percentageText,
         style: TextStyle(
           color: Colors.white,
-          fontSize: size.width * 0.16,
+          fontSize: size.width * 0.19,
           fontWeight: FontWeight.w900,
-          fontFamily: 'Courier', // scientific/monospace look
+          fontFamily: 'Courier',
           shadows: [
             Shadow(
-              color: theme.colorScheme.primary.withValues(alpha: 0.5),
-              blurRadius: 10,
+              color: theme.colorScheme.primary.withValues(alpha: 0.6),
+              blurRadius: 8,
             ),
           ],
         ),
@@ -160,55 +206,27 @@ class _GaugePainter extends CustomPainter {
 
     textPainter.paint(
       canvas,
-      Offset(center.dx - textPainter.width / 2, center.dy - textPainter.height / 2 - 8),
+      Offset(center.dx - textPainter.width / 2, center.dy - textPainter.height / 2 - 6),
     );
 
     // Label under percentage
+    final double labelFontSize = (size.width * 0.07).clamp(7.0, 11.0);
     final labelPainter = TextPainter(
-      text: const TextSpan(
+      text: TextSpan(
         text: 'CONFIDENCE',
         style: TextStyle(
-          color: Colors.white60,
-          fontSize: 9,
+          color: Colors.white70,
+          fontSize: labelFontSize,
           fontWeight: FontWeight.bold,
-          letterSpacing: 2,
+          letterSpacing: 1.5,
         ),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
     labelPainter.paint(
       canvas,
-      Offset(center.dx - labelPainter.width / 2, center.dy + textPainter.height / 2 - 4),
+      Offset(center.dx - labelPainter.width / 2, center.dy + textPainter.height / 2 - 6),
     );
-
-    // 6. Draw analog physical needle pointing to current value
-    final needleAngle = startAngle + currentSweep;
-    final needleLength = radius - 36;
-    
-    final needlePaint = Paint()
-      ..color = Colors.redAccent
-      ..strokeWidth = 3.0
-      ..strokeCap = StrokeCap.round;
-
-    final needleEnd = Offset(
-      center.dx + needleLength * cos(needleAngle),
-      center.dy + needleLength * sin(needleAngle),
-    );
-
-    // Draw the tail of the needle extending slightly backwards
-    final needleTail = Offset(
-      center.dx - 12.0 * cos(needleAngle),
-      center.dy - 12.0 * sin(needleAngle),
-    );
-
-    canvas.drawLine(needleTail, needleEnd, needlePaint);
-
-    // Needle pivot center pin
-    final centerPinOuter = Paint()..color = Colors.redAccent;
-    final centerPinInner = Paint()..color = Colors.white;
-
-    canvas.drawCircle(center, 6.0, centerPinOuter);
-    canvas.drawCircle(center, 2.5, centerPinInner);
   }
 
   @override

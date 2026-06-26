@@ -24,7 +24,6 @@ class _CameraScreenState extends State<CameraScreen> with TickerProviderStateMix
   final TextEditingController _guessController = TextEditingController();
   
   bool _isProcessing = false;
-  String? _errorMessage;
   String? _capturedImagePath;
   bool _hasCaptured = false;
 
@@ -53,9 +52,7 @@ class _CameraScreenState extends State<CameraScreen> with TickerProviderStateMix
       }
     } catch (e) {
       if (mounted) {
-        setState(() {
-          _errorMessage = 'Failed to initialize camera. Please grant camera permissions.';
-        });
+        setState(() {});
       }
     }
   }
@@ -103,9 +100,11 @@ class _CameraScreenState extends State<CameraScreen> with TickerProviderStateMix
         _hasCaptured = true;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to capture photo: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to capture photo: $e')),
+        );
+      }
     }
   }
 
@@ -140,10 +139,12 @@ class _CameraScreenState extends State<CameraScreen> with TickerProviderStateMix
         'predictionFullName': prediction.fullName,
         'confidence': prediction.confidence,
         'inferenceTimeMs': prediction.inferenceTimeMs,
-        'topThree': prediction.topThree?.map((p) => {
-          'label': p.label,
-          'fullName': p.fullName,
-          'confidence': p.confidence,
+        'topThree': prediction.topThree?.map((p) {
+          return <String, dynamic>{
+            'label': p.label,
+            'fullName': p.fullName,
+            'confidence': p.confidence,
+          };
         }).toList(),
         'userGuess': userGuess,
         'isCorrect': isCorrect,
@@ -435,7 +436,15 @@ class _CameraScreenState extends State<CameraScreen> with TickerProviderStateMix
                                   const SizedBox(height: 8),
                                   TextButton(
                                     onPressed: () {
+                                      // Delete the orphaned permanent image file to avoid storage leaks
+                                      if (_capturedImagePath != null) {
+                                        final file = File(_capturedImagePath!);
+                                        if (file.existsSync()) {
+                                          file.deleteSync();
+                                        }
+                                      }
                                       setState(() {
+                                        _capturedImagePath = null;
                                         _hasCaptured = false;
                                         _guessController.clear();
                                       });

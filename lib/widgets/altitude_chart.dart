@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/constants.dart';
 
 class AltitudeChart extends StatefulWidget {
   final String activeCloudLabel;
@@ -42,20 +43,7 @@ class _AltitudeChartState extends State<AltitudeChart> with SingleTickerProvider
   }
 
   String _getCloudFullName(String abbrev) {
-    switch (abbrev) {
-      case 'Ci': return 'Cirrus';
-      case 'Cc': return 'Cirrocumulus';
-      case 'Cs': return 'Cirrostratus';
-      case 'Ct': return 'Contrails';
-      case 'Ac': return 'Altocumulus';
-      case 'As': return 'Altostratus';
-      case 'Cu': return 'Cumulus';
-      case 'Ns': return 'Nimbostratus';
-      case 'Sc': return 'Stratocumulus';
-      case 'St': return 'Stratus';
-      case 'Cb': return 'Cumulonimbus';
-      default: return abbrev;
-    }
+    return AppConstants.cloudFullNames[abbrev] ?? abbrev;
   }
 
   String _getAltitudeRange(String level) {

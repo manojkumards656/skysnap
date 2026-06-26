@@ -75,7 +75,7 @@ class TFLiteService {
       }
     }
 
-    final inputBuffer = ImageUtils.preprocessImage(imagePath);
+    final inputBuffer = await ImageUtils.preprocessImage(imagePath);
     final input = inputBuffer.reshape([1, AppConstants.inputSize, AppConstants.inputSize, AppConstants.numChannels]);
     final output = List<double>.filled(1 * AppConstants.numClasses, 0.0).reshape([1, AppConstants.numClasses]);
 

@@ -11,96 +11,139 @@ class HiveService {
     await Hive.openBox(AppConstants.snapsBoxName);
     final box = await Hive.openBox(AppConstants.cloudBoxName);
 
-    if (box.isEmpty) {
-      await box.put('Ac', {
-        'name': 'Ac',
-        'fullName': 'Altocumulus',
-        'description': 'Mid-level clouds appearing as white or gray patches, sheets, or layers of rounded masses. Often arranged in rows or waves.',
-        'typicalAltitude': '2,000 – 6,000 m (6,500 – 20,000 ft)',
-        'weatherMeaning': 'Generally fair weather, but morning altocumulus on a warm humid day can signal afternoon thunderstorms.',
-        'funFact': 'Altocumulus clouds can form stunning "mackerel sky" patterns that have helped sailors predict weather for centuries.',
-      });
-      await box.put('As', {
-        'name': 'As',
-        'fullName': 'Altostratus',
-        'description': 'A gray or blue-gray mid-level cloud sheet that usually covers the entire sky. Thin enough to reveal the sun as a vague bright spot.',
-        'typicalAltitude': '2,000 – 6,000 m (6,500 – 20,000 ft)',
-        'weatherMeaning': 'Often precedes continuous rain or snow. A reliable indicator that a warm front is approaching.',
-        'funFact': 'Looking at the sun through altostratus is like looking through frosted glass — you can tell where it is, but there are no shadows on the ground.',
-      });
-      await box.put('Cb', {
-        'name': 'Cb',
-        'fullName': 'Cumulonimbus',
-        'description': 'Towering vertical clouds with massive energy, extending from low altitudes to the tropopause. Often have a distinctive anvil-shaped top.',
-        'typicalAltitude': '500 – 16,000 m (1,600 – 52,000 ft)',
-        'weatherMeaning': 'Thunderstorms, heavy rain, hail, lightning, and occasionally tornadoes. The most dangerous cloud type for aviation.',
-        'funFact': 'A single large cumulonimbus can contain 300,000 tons of water and release energy equivalent to 10 Hiroshima-sized atomic bombs.',
-      });
-      await box.put('Cc', {
-        'name': 'Cc',
-        'fullName': 'Cirrocumulus',
-        'description': 'Very small, white high-altitude cloud patches arranged in ripples or grains, without shading. One of the rarest cloud types.',
-        'typicalAltitude': '5,000 – 13,000 m (16,500 – 43,000 ft)',
-        'weatherMeaning': 'Usually indicates fair weather. In tropical regions, may appear before a hurricane.',
-        'funFact': 'Cirrocumulus create the classic "mackerel sky" — named because the pattern resembles fish scales. They rarely last longer than a few minutes.',
-      });
-      await box.put('Ci', {
-        'name': 'Ci',
-        'fullName': 'Cirrus',
-        'description': 'Thin, wispy, hair-like clouds made entirely of ice crystals. Often swept into delicate filaments by high-altitude winds.',
-        'typicalAltitude': '5,000 – 13,000 m (16,500 – 43,000 ft)',
-        'weatherMeaning': 'Fair weather when sparse. Dense, increasing cirrus may indicate an approaching warm front with rain in 12–24 hours.',
-        'funFact': 'Cirrus clouds are made entirely of ice crystals and exist at temperatures below -40°C. The wispy tails are called "fallstreaks" — ice crystals falling and evaporating.',
-      });
-      await box.put('Cs', {
-        'name': 'Cs',
-        'fullName': 'Cirrostratus',
-        'description': 'A thin, transparent high-altitude veil of ice crystals that covers the sky partly or completely. Often nearly invisible.',
-        'typicalAltitude': '5,000 – 13,000 m (16,500 – 43,000 ft)',
-        'weatherMeaning': 'Rain or snow is likely within 12–24 hours, as cirrostratus often precedes warm fronts.',
-        'funFact': 'Cirrostratus is responsible for the beautiful halos you sometimes see around the sun or moon — caused by light refracting through hexagonal ice crystals.',
-      });
-      await box.put('Ct', {
-        'name': 'Ct',
-        'fullName': 'Contrails',
-        'description': 'Condensation trails left by aircraft at high altitudes. Formed when hot, humid exhaust mixes with cold ambient air, causing water vapor to freeze.',
-        'typicalAltitude': '8,000 – 12,000 m (26,000 – 40,000 ft)',
-        'weatherMeaning': 'Persistent, spreading contrails indicate high upper-atmosphere humidity and may signal approaching weather systems.',
-        'funFact': 'Contrails that persist and spread can eventually become indistinguishable from natural cirrus clouds, and studies suggest they may affect regional climate.',
-      });
-      await box.put('Cu', {
-        'name': 'Cu',
-        'fullName': 'Cumulus',
-        'description': 'Puffy, white clouds with flat bases and rounded tops, resembling cotton balls. They form due to daytime surface heating and convection.',
-        'typicalAltitude': '500 – 2,000 m (1,600 – 6,500 ft)',
-        'weatherMeaning': 'Small, scattered cumulus indicate fair weather. Rapidly growing cumulus (cumulus congestus) can develop into cumulonimbus thunderstorms.',
-        'funFact': 'The average fair-weather cumulus cloud weighs about 500,000 kg (1.1 million pounds) — roughly the weight of 100 elephants floating in the sky.',
-      });
-      await box.put('Ns', {
-        'name': 'Ns',
-        'fullName': 'Nimbostratus',
-        'description': 'A thick, dark, featureless cloud layer that blocks the sun completely. Produces continuous, widespread, moderate-to-heavy precipitation.',
-        'typicalAltitude': '0 – 3,000 m (0 – 10,000 ft)',
-        'weatherMeaning': 'Steady, prolonged rain or snow that can last for hours. Associated with warm fronts and large-scale weather systems.',
-        'funFact': 'Nimbostratus is often so thick (up to several kilometers) that it turns day into a gloomy twilight. It is the classic "rainy day" cloud.',
-      });
-      await box.put('Sc', {
-        'name': 'Sc',
-        'fullName': 'Stratocumulus',
-        'description': 'Low, lumpy, gray or white cloud patches or sheets with dark honeycomb-like gaps. Cover large areas of sky in rolling masses.',
-        'typicalAltitude': '500 – 2,000 m (1,600 – 6,500 ft)',
-        'weatherMeaning': 'Generally dry weather with possible light drizzle. Usually do not produce significant precipitation.',
-        'funFact': 'Stratocumulus is the most common cloud type on Earth, covering about 20% of the planet\'s surface at any given time — especially over oceans.',
-      });
-      await box.put('St', {
-        'name': 'St',
-        'fullName': 'Stratus',
-        'description': 'A uniform, gray, featureless low-altitude cloud layer resembling fog that does not touch the ground. Covers the sky like a blanket.',
-        'typicalAltitude': '0 – 2,000 m (0 – 6,500 ft)',
-        'weatherMeaning': 'Overcast skies with drizzle or mist. Rarely produces heavy rain but can reduce visibility significantly.',
-        'funFact': 'Stratus clouds that touch the ground are simply called fog. The only difference between stratus and fog is altitude — if you can walk through it, it\'s fog.',
-      });
-    }
+    // Seeding cloud configurations with rich meteorological details
+    await box.put('Ac', {
+      'name': 'Ac',
+      'fullName': 'Altocumulus',
+      'family': 'Mid-level',
+      'composition': 'Supercooled liquid water droplets and ice crystals',
+      'formation': 'Shallow convection of warm, moist air rising in a moderately unstable middle layer of the atmosphere.',
+      'precipitation': 'None, but can precede weather changes or thunderstorm development.',
+      'description': 'Mid-level clouds appearing as white or gray patches, sheets, or layers of rounded masses. Often arranged in rows or waves.',
+      'typicalAltitude': '2,000 – 6,000 m (6,500 – 20,000 ft)',
+      'weatherMeaning': 'Generally fair weather, but morning altocumulus on a warm humid day can signal afternoon thunderstorms.',
+      'funFact': 'Altocumulus clouds can form stunning "mackerel sky" patterns that have helped sailors predict weather for centuries.',
+    });
+    await box.put('As', {
+      'name': 'As',
+      'fullName': 'Altostratus',
+      'family': 'Mid-level',
+      'composition': 'Supercooled liquid water droplets and ice crystals',
+      'formation': 'Gradual lifting and cooling of a large, stable air mass over a wide geographic area.',
+      'precipitation': 'Occasional light rain or snow, often becoming continuous as a warm front approaches.',
+      'description': 'A gray or blue-gray mid-level cloud sheet that usually covers the entire sky. Thin enough to reveal the sun as a vague bright spot.',
+      'typicalAltitude': '2,000 – 6,000 m (6,500 – 20,000 ft)',
+      'weatherMeaning': 'Often precedes continuous rain or snow. A reliable indicator that a warm front is approaching.',
+      'funFact': 'Looking at the sun through altostratus is like looking through frosted glass — you can tell where it is, but there are no shadows on the ground.',
+    });
+    await box.put('Cb', {
+      'name': 'Cb',
+      'fullName': 'Cumulonimbus',
+      'family': 'Vertical / Multi-level',
+      'composition': 'Liquid water at low levels, supercooled water at mid-levels, and ice crystals near the top.',
+      'formation': 'Intense convection of highly unstable moist air, rising rapidly to the top of the troposphere.',
+      'precipitation': 'Heavy downpours, thunderstorms, lightning, hail, and strong convective wind gusts.',
+      'description': 'Towering vertical clouds with massive energy, extending from low altitudes to the tropopause. Often have a distinctive anvil-shaped top.',
+      'typicalAltitude': '500 – 16,000 m (1,600 – 52,000 ft)',
+      'weatherMeaning': 'Thunderstorms, heavy rain, hail, lightning, and occasionally tornadoes. The most dangerous cloud type for aviation.',
+      'funFact': 'A single large cumulonimbus can contain 300,000 tons of water and release energy equivalent to 10 Hiroshima-sized atomic bombs.',
+    });
+    await box.put('Cc', {
+      'name': 'Cc',
+      'fullName': 'Cirrocumulus',
+      'family': 'High-level',
+      'composition': 'Almost exclusively ice crystals',
+      'formation': 'Localized shallow convection or wind shear at very high altitudes, causing wave-like structures.',
+      'precipitation': 'None.',
+      'description': 'Very small, white high-altitude cloud patches arranged in ripples or grains, without shading. One of the rarest cloud types.',
+      'typicalAltitude': '5,000 – 13,000 m (16,500 – 43,000 ft)',
+      'weatherMeaning': 'Usually indicates fair weather. In tropical regions, may appear before a hurricane.',
+      'funFact': 'Cirrocumulus create the classic "mackerel sky" — named because the pattern resembles fish scales. They rarely last longer than a few minutes.',
+    });
+    await box.put('Ci', {
+      'name': 'Ci',
+      'fullName': 'Cirrus',
+      'family': 'High-level',
+      'composition': 'Entirely ice crystals',
+      'formation': 'Crystallization of water vapor at extremely high, cold altitudes, often shaped by high-velocity winds.',
+      'precipitation': 'None reaching the ground (evaporates high in the air as virga).',
+      'description': 'Thin, wispy, hair-like clouds made entirely of ice crystals. Often swept into delicate filaments by high-altitude winds.',
+      'typicalAltitude': '5,000 – 13,000 m (16,500 – 43,000 ft)',
+      'weatherMeaning': 'Fair weather when sparse. Dense, increasing cirrus may indicate an approaching warm front with rain in 12–24 hours.',
+      'funFact': 'Cirrus clouds are made entirely of ice crystals and exist at temperatures below -40°C. The wispy tails are called "fallstreaks" — ice crystals falling and evaporating.',
+    });
+    await box.put('Cs', {
+      'name': 'Cs',
+      'fullName': 'Cirrostratus',
+      'family': 'High-level',
+      'composition': 'Entirely ice crystals',
+      'formation': 'Slow, widespread lifting of humid air masses at very high elevations, creating a uniform sheet.',
+      'precipitation': 'None reaching the ground, but signals continuous rain or snow within 12–24 hours.',
+      'description': 'A thin, transparent high-altitude veil of ice crystals that covers the sky partly or completely. Often nearly invisible.',
+      'typicalAltitude': '5,000 – 13,000 m (16,500 – 43,000 ft)',
+      'weatherMeaning': 'Rain or snow is likely within 12–24 hours, as cirrostratus often precedes warm fronts.',
+      'funFact': 'Cirrostratus is responsible for the beautiful halos you sometimes see around the sun or moon — caused by light refracting through hexagonal ice crystals.',
+    });
+    await box.put('Ct', {
+      'name': 'Ct',
+      'fullName': 'Contrails',
+      'family': 'High-level (Man-made)',
+      'composition': 'Ice crystals',
+      'formation': 'Water vapor in hot jet engine exhaust mixing with ambient cold, dry high-altitude air, freezing rapidly.',
+      'precipitation': 'None.',
+      'description': 'Condensation trails left by aircraft at high altitudes. Formed when hot, humid exhaust mixes with cold ambient air, causing water vapor to freeze.',
+      'typicalAltitude': '8,000 – 12,000 m (26,000 – 40,000 ft)',
+      'weatherMeaning': 'Persistent, spreading contrails indicate high upper-atmosphere humidity and may signal approaching weather systems.',
+      'funFact': 'Contrails that persist and spread can eventually become indistinguishable from natural cirrus clouds, and studies suggest they may affect regional climate.',
+    });
+    await box.put('Cu', {
+      'name': 'Cu',
+      'fullName': 'Cumulus',
+      'family': 'Low-level',
+      'composition': 'Liquid water droplets',
+      'formation': 'Solar heating of the Earth\'s surface, creating rising thermals of air that condense at their dew point.',
+      'precipitation': 'None for fair-weather cumulus; heavy showers if they develop into cumulus congestus.',
+      'description': 'Puffy, white clouds with flat bases and rounded tops, resembling cotton balls. They form due to daytime surface heating and convection.',
+      'typicalAltitude': '500 – 2,000 m (1,600 – 6,500 ft)',
+      'weatherMeaning': 'Small, scattered cumulus indicate fair weather. Rapidly growing cumulus (cumulus congestus) can develop into cumulonimbus thunderstorms.',
+      'funFact': 'The average fair-weather cumulus cloud weighs about 500,000 kg (1.1 million pounds) — roughly the weight of 100 elephants floating in the sky.',
+    });
+    await box.put('Ns', {
+      'name': 'Ns',
+      'fullName': 'Nimbostratus',
+      'family': 'Multi-level / Low-to-Mid',
+      'composition': 'Water droplets and ice crystals / snowflakes',
+      'formation': 'Widespread, slow lifting of deep, saturated air masses, usually along frontal boundaries.',
+      'precipitation': 'Continuous, steady, prolonged moderate-to-heavy rain or snow.',
+      'description': 'A thick, dark, featureless cloud layer that blocks the sun completely. Produces continuous, widespread, moderate-to-heavy precipitation.',
+      'typicalAltitude': '0 – 3,000 m (0 – 10,000 ft)',
+      'weatherMeaning': 'Steady, prolonged rain or snow that can last for hours. Associated with warm fronts and large-scale weather systems.',
+      'funFact': 'Nimbostratus is often so thick (up to several kilometers) that it turns day into a gloomy twilight. It is the classic "rainy day" cloud.',
+    });
+    await box.put('Sc', {
+      'name': 'Sc',
+      'fullName': 'Stratocumulus',
+      'family': 'Low-level',
+      'composition': 'Mostly liquid water droplets',
+      'formation': 'Weak convective currents in a boundary layer, spreading horizontally beneath a temperature inversion.',
+      'precipitation': 'Occasional light drizzle or snow flurries.',
+      'description': 'Low, lumpy, gray or white cloud patches or sheets with dark honeycomb-like gaps. Cover large areas of sky in rolling masses.',
+      'typicalAltitude': '500 – 2,000 m (1,600 – 6,500 ft)',
+      'weatherMeaning': 'Generally dry weather with possible light drizzle. Usually do not produce significant precipitation.',
+      'funFact': 'Stratocumulus is the most common cloud type on Earth, covering about 20% of the planet\'s surface at any given time — especially over oceans.',
+    });
+    await box.put('St', {
+      'name': 'St',
+      'fullName': 'Stratus',
+      'family': 'Low-level',
+      'composition': 'Uniform liquid water droplets',
+      'formation': 'Radiative cooling of the lower atmosphere, or the gentle lifting of surface fog.',
+      'precipitation': 'Light drizzle, freezing drizzle, or snow grains.',
+      'description': 'A uniform, gray, featureless low-altitude cloud layer resembling fog that does not touch the ground. Covers the sky like a blanket.',
+      'typicalAltitude': '0 – 2,000 m (0 – 6,500 ft)',
+      'weatherMeaning': 'Overcast skies with drizzle or mist. Rarely produces heavy rain but can reduce visibility significantly.',
+      'funFact': 'Stratus clouds that touch the ground are simply called fog. The only difference between stratus and fog is altitude — if you can walk through it, it\'s fog.',
+    });
   }
 
   Map<String, dynamic>? getCloudInfo(String abbreviation) {
@@ -132,18 +175,25 @@ class HiveService {
     await box.delete(id);
   }
 
-  int getDiscoveredCloudCount() {
+  /// Returns a map of discovered cloud labels to their first captured image path.
+  /// Performs a **single O(n) pass** over all snaps — much more efficient than
+  /// calling [isCloudDiscovered] and [getDiscoveredCloudImage] per cloud type.
+  Map<String, String?> getDiscoveryMap() {
     final box = Hive.box(AppConstants.snapsBoxName);
-    final uniqueLabels = <String>{};
+    final Map<String, String?> discoveryMap = {};
     for (final value in box.values) {
       if (value is Map) {
         final label = value['predictionLabel'];
-        if (label != null) {
-          uniqueLabels.add(label.toString());
+        if (label != null && !discoveryMap.containsKey(label.toString())) {
+          discoveryMap[label.toString()] = value['imagePath'] as String?;
         }
       }
     }
-    return uniqueLabels.length;
+    return discoveryMap;
+  }
+
+  int getDiscoveredCloudCount() {
+    return getDiscoveryMap().length;
   }
 
   bool isCloudDiscovered(String abbreviation) {

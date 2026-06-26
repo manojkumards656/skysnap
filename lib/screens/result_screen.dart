@@ -4,7 +4,6 @@ import '../models/prediction.dart';
 import '../widgets/prediction_card.dart';
 import '../widgets/altitude_chart.dart';
 import '../widgets/glass_card.dart';
-import '../theme/app_theme.dart';
 import '../services/hive_service.dart';
 
 class ResultScreen extends StatelessWidget {
@@ -66,7 +65,6 @@ class ResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCorrect = _isGuessCorrect();
-    final theme = Theme.of(context);
 
     return Scaffold(
       body: Container(
@@ -263,6 +261,10 @@ class ResultScreen extends StatelessWidget {
                           ),
                         ),
                         _infoCard(Icons.info_outline, 'Description', cloudInfo!['description']),
+                        _infoCard(Icons.category_outlined, 'Cloud Family / Altitude Layer', cloudInfo!['family']),
+                        _infoCard(Icons.science_outlined, 'Physical Composition', cloudInfo!['composition']),
+                        _infoCard(Icons.air_outlined, 'Formation Mechanism', cloudInfo!['formation']),
+                        _infoCard(Icons.grain_outlined, 'Precipitation Potential', cloudInfo!['precipitation']),
                         _infoCard(Icons.height, 'Atmospheric Level', cloudInfo!['typicalAltitude']),
                         _infoCard(Icons.umbrella_outlined, 'Weather Pattern Indication', cloudInfo!['weatherMeaning']),
                         _infoCard(Icons.wb_sunny_outlined, 'Scientific Fact', cloudInfo!['funFact']),
