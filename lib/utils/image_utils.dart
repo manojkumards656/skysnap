@@ -44,9 +44,9 @@ class ImageUtils {
     for (int y = 0; y < AppConstants.inputSize; y++) {
       for (int x = 0; x < AppConstants.inputSize; x++) {
         final pixel = resized.getPixel(x, y);
-        buffer[pixelIndex++] = pixel.r.toDouble() / AppConstants.normalizationFactor;
-        buffer[pixelIndex++] = pixel.g.toDouble() / AppConstants.normalizationFactor;
-        buffer[pixelIndex++] = pixel.b.toDouble() / AppConstants.normalizationFactor;
+        buffer[pixelIndex++] = pixel.r.toDouble();
+        buffer[pixelIndex++] = pixel.g.toDouble();
+        buffer[pixelIndex++] = pixel.b.toDouble();
       }
     }
 
